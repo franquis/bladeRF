@@ -21,7 +21,7 @@
 
 import enum
 import collections
-
+import platform
 import cffi
 
 from ._cdef import header
@@ -30,7 +30,14 @@ ffi = cffi.FFI()
 
 ffi.cdef(header)
 
-libbladeRF = ffi.dlopen("libbladeRF.so")
+currentPlatform = platform.system()
+if currentPlatform == 'Darwin':
+    libbladeRF = ffi.dlopen("libbladeRF.dylib")
+elif currentPlatform == 'Linux':
+    libbladeRF = ffi.dlopen("libbladeRF.so")
+else:
+    die('Unsupported platform "%s"' % currentPlatform)
+    
 
 
 ###############################################################################
